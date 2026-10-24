@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "build_backend"
+backend-path = ["."]
+
+[project]
+name = "content-company-base"
+version = "0.4.0"
+description = "ERC Studio: EricChan local-first content operations workbench"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = []
+
+[project.scripts]
+contentbase = "contentbase.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["contentbase*"]
+
+[tool.setuptools]
+include-package-data = false
+license-files = ["LICENSE"]
+
+[tool.setuptools.package-data]
+contentbase = ["web/index.html", "web/app.js", "web/style.css"]

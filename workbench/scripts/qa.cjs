@@ -1,0 +1,33 @@
+'use strict';
+// Own Electron application testing: _electron controls native WebContentsView;
+// a regular H5 browser cannot observe these native views.
+const {_electron}=require('/Users/USER/resources/YOUR_7B0895B9F9');
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),assert=require('node:assert/strict'),http=require('node:http');
+const {Store}=require('../src/store.cjs');const {PLATFORMS}=require('../src/platforms.cjs');
+const root=path.resolve(__dirname,'..'),out=process.env.STUDIO_QA_DIR||path.join(os.homedir(),'Library/Application Support/ContentBaseChanges/20261001-studio-account-matrix/qa');
+fs.mkdirSync(out,{recursive:true,mode:0o700});const state=path.join(out,'isolated-state');const store=new Store(state);
+if(!store.list().accounts.length)for(const p of PLATFORMS)store.add({platform:p.id,name:'入口验收 · '+p.name});
+const accounts=store.list().accounts;
+const result={scope:'isolated_app',platforms:[],screenshots:[],errors:[],real_login_complete:false};
+async function launch(){const application=await _electron.launch({executablePath:require('electron'),args:[root],env:{...process.env,STUDIO_STATE_DIR:state,STUDIO_QA:'1'}});const page=await application.firstWindow();await page.waitForSelector('#account-rows tr');return {application,page};}
+async function screen(application,name,id){const file=path.join(out,name+'.png');const bytes=await application.evaluate(async(_electron,id)=>{const wc=id?global.__studioQA.views.get(id).webContents:global.__studioQA.win.webContents;return Array.from((await wc.capturePage()).toPNG());},id||null);fs.writeFileSync(file,Buffer.from(bytes),{mode:0o600});result.screenshots.push(file);return file;}
+async function run(){let {application,page}=await launch();page.on('pageerror',e=>result.errors.push(e.message));
+ await screen(application,'01-account-list');await page.locator('#account-search').fill('视频号');assert.equal(await page.locator('#account-rows tr').count(),1);await page.locator('#account-search').fill('');
+ await page.locator('#authorize-button').click();await page.waitForSelector('#account-dialog[open]');await screen(application,'02-authorize-dialog');await page.locator('#cancel-dialog').click();
+ await page.locator('[data-tab="groups"]').click();await page.locator('#new-group').click();await page.locator('#group-form input').fill('验收分组');await page.locator('#group-form button[type="submit"]').click();await page.waitForSelector('.group-tile');await page.locator('[data-tab="accounts"]').click();
+ for(const a of accounts){await application.evaluate((_electron,id)=>global.__studioQA.open(id),a.id);await page.evaluate(()=>{document.getElementById('account-page').hidden=true;document.getElementById('browser-page').hidden=false;});await page.evaluate(()=>{const r=document.getElementById('browser-mount').getBoundingClientRect();return window.studio.bounds({x:r.x,y:r.y,width:r.width,height:r.height});});
+  // Wait for real navigation/render progress, bounded; auth requires the person.
+  await page.waitForTimeout(12000);await application.evaluate((_electron,id)=>global.__studioQA.observe(id),a.id);if(a.platform==='kuaishou')await page.waitForTimeout(5000);await page.evaluate(()=>window.studio.command('qr'));await page.waitForTimeout(1800);await application.evaluate((_electron,id)=>global.__studioQA.observe(id),a.id);
+  const probe=await application.evaluate(async(_electron,id)=>{const q=global.__studioQA,v=q.views.get(id),a=q.store.get(id);const title=await v.webContents.executeJavaScript('document.title').catch(()=>null);const qr=await v.webContents.executeJavaScript(`(()=>({images:[...document.images].filter(e=>e.getClientRects().length).length,canvas:document.querySelectorAll('canvas').length,text:(document.body?.innerText||'').slice(0,1600)}))()`).catch(()=>({}));return {platform:a.platform,title,status:a.status,reason:a.statusReason,host:new URL(v.webContents.getURL()).hostname,visibleImages:qr.images,canvas:qr.canvas,text:qr.text};},a.id);
+  const file=await screen(application,'platform-'+a.platform,a.id);result.platforms.push({...probe,screenshot:file,login_completed_by_person:false});assert.notEqual(probe.status,'authorized','Fresh isolated platform space is not authenticated');console.log(JSON.stringify({platform:probe.platform,status:probe.status,title:probe.title,host:probe.host}));await page.locator('#browser-return').click();await page.locator('#account-page').waitFor({state:'visible'});
+ }
+ // Native Chromium profile persistence on a local fixture, not a platform login.
+ const server=http.createServer((_req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><title>会话隔离验收</title><p>本地测试页</p>');});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;
+ const [a,b]=accounts;await application.evaluate(async(_electron,{id,origin})=>{const s=global.__studioQA.views.get(id).webContents.session;await s.cookies.set({url:origin,name:'studio_test_cookie',value:'first-account-only',expirationDate:Date.now()/1000+3600});s.flushStorageData();await s.cookies.flushStore();},{id:a.id,origin});
+ const cross=await application.evaluate(async(_electron,{id,origin})=>global.__studioQA.views.get(id).webContents.session.cookies.get({url:origin,name:'studio_test_cookie'}),{id:b.id,origin});assert.equal(cross.length,0);
+ await application.close();({application,page}=await launch());await application.evaluate((_electron,id)=>global.__studioQA.open(id),a.id);
+ const persisted=await application.evaluate(async(_electron,{id,origin})=>global.__studioQA.views.get(id).webContents.session.cookies.get({url:origin,name:'studio_test_cookie'}),{id:a.id,origin});assert.equal(persisted[0].value,'first-account-only');result.persistence={fixture_cookie_survived_restart:true,second_account_did_not_receive_cookie:true,platform_login_persistence:'pending_person_login'};
+ await application.evaluate(()=>global.__studioQA.closeView());await page.evaluate(()=>{document.getElementById('account-page').hidden=false;document.getElementById('browser-page').hidden=true;});await screen(application,'03-after-restart');await application.close();server.close();
+ result.ok=result.errors.length===0;fs.writeFileSync(path.join(out,'acceptance.json'),JSON.stringify(result,null,2),{mode:0o600});console.log(JSON.stringify({ok:result.ok,out,platform_pages:result.platforms.length,persistence:result.persistence,errors:result.errors}));if(!result.ok)process.exitCode=1;
+}
+run().catch(e=>{result.failure=e.stack;fs.writeFileSync(path.join(out,'acceptance.json'),JSON.stringify(result,null,2),{mode:0o600});console.error(e.stack);process.exitCode=1;});

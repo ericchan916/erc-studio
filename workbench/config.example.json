@@ -1,0 +1,39 @@
+{
+  "host": "127.0.0.1",
+  "port": 8844,
+  "allowed_hosts": [
+    "127.0.0.1:8844",
+    "localhost:8844"
+  ],
+  "allowed_origins": [
+    "http://127.0.0.1:8844",
+    "http://localhost:8844"
+  ],
+  "feishu_profile": "YOUR_PROFILE",
+  "lark_cli": "lark-cli",
+  "auth_pepper": "YOUR_PRIVATE_RANDOM_PEPPER",
+  "state_dir": "YOUR_ABSOLUTE_PRIVATE_GATEWAY_STATE",
+  "workspace_state_dir": "YOUR_ABSOLUTE_PRIVATE_WORKBENCH_STATE",
+  "notification_center_path": "YOUR_ABSOLUTE_REPO/workbench/shared/notification-center",
+  "membership_chat_id": "YOUR_MEMBERSHIP_CHAT_ID",
+  "model_config": "YOUR_PRIVATE_MODEL_CONFIG",
+  "members": [
+    {
+      "principal_id": "YOUR_MEMBER_UUID",
+      "handle": "owner",
+      "name": "YOUR_MEMBER_NAME",
+      "tenant_key": "YOUR_TENANT_KEY",
+      "open_id": "YOUR_USER_OPEN_ID",
+      "chat_id": "YOUR_PRIVATE_CHAT_ID"
+    }
+  ],
+  "workspace_links": {},
+  "local_codex": {
+    "enabled": false,
+    "skill_files": {
+      "video-use": "YOUR_ABSOLUTE_VIDEO_USE_SKILL_DIRECTORY",
+      "ffmpeg": "YOUR_ABSOLUTE_FFMPEG_SKILL_DIRECTORY"
+    }
+  },
+  "production_accounts": []
+}

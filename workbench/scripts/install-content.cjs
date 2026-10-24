@@ -1,0 +1,34 @@
+'use strict';
+// Narrow overlay for a shared App built by multiple working trees. No profiles/config touched.
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..'),args=process.argv.slice(2),value=flag=>args[args.indexOf(flag)+1];
+const from=value('--from'),dest=value('--dest');
+if(!args.includes('--from')||!args.includes('--dest')||![from,dest].every(p=>path.isAbsolute(p)&&p.endsWith('.app'))||from===dest||fs.existsSync(dest))throw new Error('content_overlay_destination_invalid');
+const resources=p=>path.join(p,'Contents/Resources/app'),read=(p,n)=>fs.readFileSync(path.join(resources(p),n),'utf8');
+const fingerprint=p=>{const out={};function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else out[path.relative(resources(p),f)]=crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');}}walk(resources(p));return out;};
+const before=fingerprint(from),replace=(s,anchor,next)=>{if(s.split(anchor).length!==2)throw new Error('content_overlay_anchor_changed');return s.replace(anchor,next);};
+const local=n=>fs.readFileSync(path.join(root,n),'utf8');
+let main=read(from,'src/main.cjs');if(main.includes('ContentService'))throw new Error('content_overlay_already_present');
+main=replace(main,"const {TaskPane,readTaskConfig}=require('./tasks.cjs');", "const {TaskPane,readTaskConfig,TASK_PARTITION,allowedTaskURL}=require('./tasks.cjs');\nconst {ContentService}=require('./content/service.cjs');\nlet contentService;\nconst {ProjectPane}=require('./content/project-pane.cjs');\nlet projectPane;");
+main=main.replaceAll('taskPane?.hide();websitePane?.hide();','projectPane?.hide();taskPane?.hide();websitePane?.hide();');main=main.replaceAll('taskPane.close();websitePane.close();','projectPane.close();taskPane.close();websitePane.close();');
+main=replace(main,'function closeView(){','function closeView(hideContent=true){if(hideContent)send(\'studio:content-hide\',true);');
+const init=local('src/main.cjs').split(' try{contentService=')[1]?.split('\n')[0];if(!init)throw new Error('content_overlay_source_invalid');
+const projectInit=local('src/main.cjs').split(' projectPane=new ProjectPane')[1]?.split('\n analyticsService=')[0];if(!projectInit)throw new Error('content_overlay_source_invalid');main=replace(main,' analyticsService=new AnalyticsService',' try{contentService='+init+'\n projectPane=new ProjectPane'+projectInit+'\n analyticsService=new AnalyticsService');
+const actions=local('src/main.cjs').split(' const contentActions=')[1]?.split(" bind('studio:list'")[0];if(!actions)throw new Error('content_overlay_source_invalid');
+main=replace(main," bind('studio:list'",' const contentActions='+actions+" bind('studio:list'");
+main=replace(main,"app.on('before-quit',()=>{", "app.on('before-quit',()=>{contentService?.dispose();");
+let preload=read(from,'src/preload.cjs');const api=local('src/preload.cjs').split(' content:{')[1]?.split('\n')[0];if(!api)throw new Error('content_overlay_source_invalid');preload=replace(preload,"contextBridge.exposeInMainWorld('studio',{","contextBridge.exposeInMainWorld('studio',{\n content:{"+api+'\n');
+let app=read(from,'web/app.js');app=replace(app,"['tasks','任务'],['account','账号']","['tasks','任务'],['content','内容'],['account','账号']");
+app=replace(app,"if(name==='tasks'){", "if(name==='content'){b.title='内容工作台：飞书原表与人机协同';b.onclick=()=>window.openStudioContent();}else if(name==='tasks'){");
+app=replace(app,"function icon(name){", "function icon(name){if(name==='content'){const e=node('img','nav-icon');e.src='vendor/tabler-content/bulb.svg';e.alt='';return e;}");
+app=replace(app,'function showTab(tab){','function showTab(tab){window.hideStudioContent?.();');
+let index=read(from,'web/index.html');index=replace(index,'</head>','<link rel="stylesheet" href="content.css"></head>');index=replace(index,'</body>','<script src="content-catalog.js"></script><script src="content-project-controller.js"></script><script src="content-ui.js"></script></body>');
+const hooks={'src/main.cjs':main,'src/preload.cjs':preload,'web/app.js':app,'web/index.html':index};
+for(const [name,text]of Object.entries(hooks)){if(name.endsWith('.cjs')||name.endsWith('.js')){const tmp=path.join(require('os').tmpdir(),'content-check-'+crypto.randomUUID()+path.extname(name));fs.writeFileSync(tmp,text);try{cp.execFileSync(process.execPath,['--check',tmp]);}finally{fs.unlinkSync(tmp);}}}
+cp.execFileSync('/usr/bin/ditto',[from,dest]);
+for(const [name,text]of Object.entries(hooks))fs.writeFileSync(path.join(resources(dest),name),text);
+for(const name of ['src/content','web/content-ui.js','web/content-catalog.js','web/content-project-controller.js','web/content.css','web/vendor/tabler-content'])fs.cpSync(path.join(root,name),path.join(resources(dest),name),{recursive:true});
+const after=fingerprint(dest),changed=Object.keys(before).filter(n=>before[n]!==after[n]);if(changed.some(n=>!Object.hasOwn(hooks,n)))throw new Error('content_overlay_unrelated_change');
+for(const name of Object.keys(after).filter(n=>!before[n]))if(!name.startsWith('src/content/')&&!name.startsWith('web/vendor/tabler-content/')&&!['web/content-ui.js','web/content-catalog.js','web/content-project-controller.js','web/content.css'].includes(name))throw new Error('content_overlay_unexpected_file');
+cp.execFileSync('/usr/bin/codesign',['--force','--deep','--sign','-',dest]);cp.execFileSync('/usr/bin/codesign',['--verify','--deep','--strict',dest]);
+console.log(JSON.stringify({ok:true,from,dest,changedExisting:changed,preservedExisting:Object.keys(before).length-changed.length,added:Object.keys(after).filter(n=>!before[n]),profileDataTouched:false}));

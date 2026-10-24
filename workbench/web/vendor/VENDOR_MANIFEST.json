@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "file": "markdown-it.min.js",
+      "sha256": "635972b985228e8af9f0143647c68616b7a3bb09f6946e7e4a52e43dcf5e7be5"
+    },
+    {
+      "file": "echarts.min.js",
+      "sha256": "b66b25aeb4df84e33199dc21694014d336d222cbd9deb0e5a7c14bd6aa0d0fd0"
+    },
+    {
+      "file": "tabler.min.css",
+      "sha256": "370a2d4e608ae518351d10528fc7dbe19b354ae5062c51b2a9cb294850d65403"
+    }
+  ],
+  "licenses": {
+    "markdown-it": "MIT",
+    "echarts": "Apache-2.0",
+    "tabler": "MIT"
+  },
+  "sources": {
+    "tabler": "https://github.com/tabler/tabler",
+    "echarts": "https://github.com/apache/echarts",
+    "markdown-it": "https://github.com/markdown-it/markdown-it"
+  },
+  "tabler_upstream_version_tag_verified": false,
+  "license_verified_from_official_repository": true
+}

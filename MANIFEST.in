@@ -1,0 +1,26 @@
+# Build distribution packages from a privacy-audited source export.
+include .gitignore AGENTS.md LICENSE MANIFEST.in PUBLIC_EXPORT_MANIFEST.json
+include README.md config.example.json pyproject.toml build_backend.py
+recursive-include contentbase *.py
+include contentbase/web/*.html contentbase/web/*.js contentbase/web/*.css
+include docs/*.md scripts/*.py tests/*.py
+include skills/content-company-base/SKILL.md
+recursive-include docs *.md
+recursive-include workbench *.py *.cjs *.mjs *.js *.json *.html *.css *.svg *.md LICENSE *.LICENSE
+include .github/pull_request_template.md
+include agent-runtime/workflow-registry.json
+prune workbench/node_modules
+prune .git
+prune .hg
+prune .svn
+prune .venv
+prune private
+prune runtime
+prune build
+prune dist
+prune node_modules
+prune contentbase/private
+prune contentbase/runtime
+prune contentbase/__pycache__
+global-exclude */runtime/* */private/* */__pycache__/* */.git/* */.venv/* */node_modules/*
+global-exclude *.db *.db-* *.sqlite *.sqlite3 *.log *.py[cod] .env .env.* .DS_Store config.json

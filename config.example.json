@@ -1,0 +1,18 @@
+{
+  "feishu": {
+    "cli": "lark-cli",
+    "profile": "YOUR_PROFILE",
+    "base_token": "YOUR_BASE_TOKEN",
+    "table_id": "YOUR_TABLE_ID",
+    "fields": {
+      "title": "标题",
+      "body": "正文",
+      "stage": "阶段",
+      "published_url": "作品链接",
+      "metrics": "复盘指标",
+      "review": "复盘结论"
+    },
+    "stages": {"review": "待审核", "approved": "已审核", "submitted": "已投递", "published": "已发布", "reviewed": "已复盘"}
+  },
+  "yxer": {"cli": "yxer"}
+}

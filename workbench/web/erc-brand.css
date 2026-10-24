@@ -1,0 +1,12 @@
+:root{--purple:#171717}
+.brand{gap:10px}
+.brand strong{font-size:17px;letter-spacing:.1px}
+.studio-avatar,.studio-login-mark{background:#080808;color:#fff;border-radius:8px;overflow:hidden;flex:none}
+.studio-avatar img,.studio-login-mark img{width:100%;height:100%;object-fit:contain;border-radius:0}
+.brand-dot{background:#171717}
+.home-avatar-stage{display:grid;place-items:center}
+.home-avatar-stage #home-avatar:not([data-renderer="tripo-glb"]){display:none}
+.home-avatar-stage:has(canvas[data-renderer="tripo-glb"]) .erc-home-logo{display:none}
+.erc-home-logo{display:block;width:180px;height:180px;max-height:100%;object-fit:contain;border-radius:16px}
+.studio-login-page .home-login button#home-scan-start,.home-send{background:#171717;border-color:#171717;color:#fff}
+.source-inspection-banner{background:#f4f4f2;color:#656565;border-color:#e6e6e1}

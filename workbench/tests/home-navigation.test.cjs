@@ -1,0 +1,8 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+// Same browser-visible CSS selector bug: expanded group.hidden=false must not
+// be overridden by the homepage class, while anonymous auth still fails closed.
+function forcedHidden(css,classes){const candidates=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];return candidates.some(([,selector,body])=>selector.split(',').some(s=>s.trim()==='.studio-chat-home #main-nav .website-subnav')&&classes.includes('website-subnav')&&/display\s*:\s*none/.test(body));}
+test('expanded website and Bar submenus remain visible in welcome and active conversation states',()=>{const css=fs.readFileSync(path.join(root,'web/home-chat.css'),'utf8');for(const classes of [['website-subnav'],['website-subnav','bar-nav-group']])for(const state of ['welcome','chat-mode'])assert.equal(forcedHidden(css,classes),false,state+': '+classes.join('.'));assert.ok(css.includes('body.studio-auth-locked>.rail,body.studio-auth-locked>main{display:none!important}'));const base=fs.readFileSync(path.join(root,'web/studio.css'),'utf8');assert.ok(base.includes('[hidden]{display:none!important}'));});
+test('each native destination hides the home view; leaving only stops UI polling, never cancels jobs',()=>{for(const file of ['task-ui.js','website-ui.js','content-ui.js','analytics-ui.js','bar-ui.js','app.js'])assert.ok(fs.readFileSync(path.join(root,'web',file),'utf8').includes('window.hideStudioHome?.()'),file);const controller=fs.readFileSync(path.join(root,'web/conversation-controller.js'),'utf8');assert.ok(controller.includes('leave(){this.visible=false;this.stopPoll();}'));});

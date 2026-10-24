@@ -1,0 +1,18 @@
+.home-page{flex:1;min-height:0;display:flex;flex-direction:column;padding:24px 40px 30px;overflow:auto;background:#fff}
+.home-header{display:flex;align-items:center;justify-content:space-between;gap:16px;color:#969ba3;font-size:12px}
+.home-header strong{font-size:16px;color:#333941;font-weight:600}
+.home-preview-label{border:1px solid #edeaf5;border-radius:5px;padding:4px 8px;color:#806da8;background:#faf9fd}
+.home-content{width:min(760px,100%);margin:auto;display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:10px}
+.home-avatar-stage{width:min(420px,100%);height:320px;position:relative;flex:none}
+#home-avatar{display:block;width:100%;height:100%;touch-action:pan-y;cursor:pointer}
+.home-content h1{font-size:29px;font-weight:650;letter-spacing:-.5px;margin:2px 0 0;color:#262b33}
+.home-content>.home-intro{margin:0;color:#969ba3;font-size:13px;line-height:1.7;text-align:center}
+.home-avatar-controls{display:flex;align-items:center;gap:12px;margin:3px 0 14px;font-size:11px;color:#969ba3}
+.home-avatar-controls button{background:transparent;border:1px solid #ececf2;border-radius:6px;color:#85818e;padding:4px 8px;font-size:11px;box-shadow:var(--shadow)}
+.home-composer{align-self:stretch;border:1px solid #e8e9ee;border-radius:16px;padding:17px 18px 13px;background:#fafafb;box-shadow:var(--shadow)}
+.home-composer textarea{display:block;width:100%;min-height:75px;resize:none;border:0;outline:0;background:transparent;color:#353b45;font:inherit;font-size:15px;line-height:1.7}
+.home-composer textarea::placeholder{color:#a1a5ad}
+.home-composer-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#959aa2;font-size:11px}
+.home-send{width:35px;height:35px;border:0;border-radius:50%;background:#24262e;color:#fff;font-size:19px;box-shadow:var(--shadow)}
+.home-boundary{margin:4px 0 0;color:#a1a5ac;font-size:11px;text-align:center;line-height:1.7}
+@media(max-height:760px){.home-page{padding-top:18px;padding-bottom:18px}.home-content{gap:7px;padding:12px 0}.home-avatar-stage{height:220px}.home-content h1{font-size:25px}.home-avatar-controls{margin-bottom:8px}}

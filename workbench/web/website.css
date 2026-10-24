@@ -1,0 +1,6 @@
+.website-page{display:flex;flex-direction:column;flex:1;min-height:0}
+.website-toolbar,.website-page>.browser-status{display:none}
+.website-page.load-error>.website-toolbar,.website-page.load-error>.browser-status{display:flex}
+.website-toolbar strong,.website-toolbar .browser-pill{display:none}
+#website-mount{flex:1;min-height:0;background:#fff}
+.website-error{color:#c25252}

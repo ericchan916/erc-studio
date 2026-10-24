@@ -1,0 +1,127 @@
+{
+  "repository": "https://github.com/NousResearch/hermes-agent",
+  "commit": "639eee305860ebcde0926321cbb6ef2f4f4c803d",
+  "license": "MIT",
+  "scope": "ContextEngine contract and selected upstream context/recovery primitives; no complete Hermes runtime imported",
+  "adaptations": [
+    "Python 3.9 postponed annotations",
+    "package-relative compression_marker import",
+    "ContextEngine.update_model imports the selected local threshold helper instead of the complete upstream compressor"
+  ],
+  "segments": [
+    {
+      "path": "agent/context_engine.py",
+      "start": 48,
+      "end": 250,
+      "sha256": "bc5302123054ed75e9fd853c5e015f7f1cd024caf495e05a5cd16213ec8ab9e8"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 950,
+      "end": 950,
+      "sha256": "38e78e5a2b33ea3a4c9daf926878158b149c6c2790829c2d23c27d9646894873"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 951,
+      "end": 951,
+      "sha256": "a67f608017070ef655e036c6dfb7e010f235a3a7f8d3703d9e9fcbef282a1e73"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 952,
+      "end": 952,
+      "sha256": "f1c43ac686490e403c63a1c4e75afd31269db06b57dc43613618931fd67c5c20"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 960,
+      "end": 966,
+      "sha256": "6c6cd4e735ad4ab86b20ef84c69af464a1f6189164341b6d4b9df009cd020c8d"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 969,
+      "end": 972,
+      "sha256": "5f2fc223b336f6cffee4568f843e8bfcf687ed04ede761db2111ca14c713c3f1"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 975,
+      "end": 979,
+      "sha256": "9d84105aef928ee490aee41cd1034d38483c5dccceb3c57b4124707626445694"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 982,
+      "end": 1009,
+      "sha256": "0520be58b6b3ac720982bc7492534d0b9d7b664c0208d15c76b4fc94e843af95"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 1358,
+      "end": 1360,
+      "sha256": "2214e7bcee9d2cd46292874785a7cd1555a48c0ba8b4578ea23708ad79a4fa35"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 1363,
+      "end": 1365,
+      "sha256": "ad97bcec1235a8e7dcbc9b8e92f71975630ed438a0427563f3752cc060fb471b"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 1368,
+      "end": 1379,
+      "sha256": "b1288ee11133c93a0ae9f1297ad466cf322cd6a85ac224e9253ecb524f112d68"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 1392,
+      "end": 1396,
+      "sha256": "bdb48548b3ce9fc18bb58acd74dab5ea7318a8631295b04c03f44cafcc506fd0"
+    },
+    {
+      "path": "gateway/run_turn.py",
+      "start": 118,
+      "end": 141,
+      "sha256": "79061b18599118217953114caaf2b78b76a17510dbd10708ddd8b7e370388f96"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 1382,
+      "end": 1384,
+      "sha256": "c6252a9c3868c2117a3ffb2447767fbaff8b588dda47d1e8aff4c6487d8eb403"
+    },
+    {
+      "path": "agent/prompt_builder.py",
+      "start": 592,
+      "end": 592,
+      "sha256": "4bee7a8983e80c97ce34ec8adc75e4f6912ced6ac0ae3a72bc446944f087c4ac"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 2056,
+      "end": 2065,
+      "sha256": "72fbff8dd005f1b2d8af315553b88867fc41381ead216d0a41f28eba5a66e87d"
+    },
+    {
+      "path": "agent/context_compressor.py",
+      "start": 2068,
+      "end": 2080,
+      "sha256": "17ac449a3f31a662ff43f77ecd06cdfccd32a5eab302032c6e44f2e08689c45c"
+    }
+  ],
+  "upstream_files": {
+    "agent/context_engine.py": "1f5a95adf26fc79245566fa3018cf8a3f613a7c837316a4bdaaa43736a56805c",
+    "agent/context_compressor.py": "fd1ce1d5173066b20d478c2a36d132c0ae6060d5fe88818e8b88f5ff7d7a93bc",
+    "gateway/run_turn.py": "dc5149f838c54fb8fbcf66715ae2b44442e5441d3c62994471925cb2fd4a06e0",
+    "agent/compression_marker.py": "3bee18dc944e95453a42035c2cf1001269974bca0086018176d346c73507c95e",
+    "agent/prompt_builder.py": "6ab0d004cab1152938855a0b73b039b83c156c278980169d5873cbbdf6234a34"
+  },
+  "local_sha256": {
+    "context.py": "d7b48330116c6ead83394a0d7478360db903f4bae7fa333a5adea0bfc1ade05c",
+    "compression_marker.py": "3bee18dc944e95453a42035c2cf1001269974bca0086018176d346c73507c95e",
+    "LICENSE": "821556e6336796450ab852d375117b48a4887e71d255794fd6318d99982a5ab6"
+  }
+}

@@ -1,0 +1,33 @@
+/* Account management stays compact; operational metrics remain in details. */
+.account-page .filter-panel{border:0;border-right:1px solid #ececec;border-radius:0;width:156px;padding:8px 18px 8px 0}
+.account-page #owner-filter,.account-page #operator-filter{display:none}
+.account-page .table-card{border:0;border-radius:0;box-shadow:none}
+.account-page .toolbar{padding-bottom:18px;border-bottom:1px solid #e9e9e9;margin-bottom:0}
+.account-page .account-table{table-layout:auto;width:100%;min-width:100%;border-collapse:separate;border-spacing:0}
+.account-page .account-table th{height:54px;padding:12px 18px;background:#fafafa;color:#858585;font-size:11px;font-weight:500;white-space:nowrap;border-bottom:1px solid #e7e7e7}
+.account-page .account-table td{height:76px;padding:14px 18px;border-bottom:1px solid #efefef;background:#fff}
+.account-page .account-table tbody tr:hover td{background:#fafafa}
+.account-page .account-table th.account-identity-head,.account-page .account-table td.account-identity-cell{width:212px;min-width:212px;position:sticky;left:0;z-index:2;box-shadow:none;border-right:1px solid #eee}
+.account-page .account-table th.account-identity-head{z-index:5;background:#fafafa}
+.account-page .account-table th.account-status-head,.account-page .account-table td.account-status-cell{width:126px;min-width:126px}
+.account-page .account-table th.metric-column-head,.account-page .account-table td.metric-value-cell{width:96px;min-width:96px;text-align:right}
+.account-page .account-table th.metric-column-head small{display:block;font-size:10px;font-weight:400;margin-top:3px;color:#aaa}
+.account-page .account-table th.account-source-head,.account-page .account-table td.account-source-cell{width:168px;min-width:168px}
+.account-page .account-table th.actions-cell,.account-page .account-table td.account-actions-cell{width:92px;min-width:92px;position:sticky;right:0;z-index:2;background:#fff;text-align:center;box-shadow:none;border-left:1px solid #eee}
+.account-page .account-table th.actions-cell{z-index:5;background:#fafafa}
+.account-page .account-table .select-cell{width:36px;min-width:36px;position:sticky;left:0;z-index:3;padding:8px}
+.account-page .account-table.account-batch .account-identity-cell,.account-page .account-table.account-batch .account-identity-head{left:36px}
+.metric-number{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.25px;color:#333;white-space:nowrap}
+.metric-total{font-weight:650;color:#111}.metric-unavailable{font-size:11px;font-weight:400;color:#a0a0a0;letter-spacing:0}.metric-historical{color:#6b6b6b}.metric-conflict{color:#9a6c35}
+.metric-note{font-size:11px;line-height:1.55;color:#888}.metric-source{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#666}.metric-source small{font-size:10px;color:#999}
+.account-page .account-name{font-size:13px;font-weight:600;color:#232323}.account-page .account-avatar{width:34px;height:34px;border-radius:50%}.account-page .account-platform{font-size:10px;color:#999;margin-top:5px}
+.account-page .account-status-cell .status-badge{font-size:10px;padding:3px 6px;box-shadow:none}.account-page .account-status-cell .metric-note{max-width:116px;font-size:10px;line-height:1.45;margin-top:5px}.account-page .reauthorize{font-size:10px}
+.account-metrics-strip{display:flex;align-items:center;gap:24px;overflow-x:auto;padding:12px 0}.account-metric{display:flex;flex:none;flex-direction:column;gap:8px;min-width:76px}.metric-label{font-size:11px;color:#999}.metric-detail-button{border:0;background:none;padding:4px 0;flex:none;text-decoration:none;font-size:11px;color:#666}
+.account-page .grid-cards{display:flex;flex-direction:column;padding:0}.account-page .grid-card{border:0;border-bottom:1px solid #eee;border-radius:0;padding:18px 0;box-shadow:none}
+.account-metrics-dialog{width:min(1180px,94vw);max-width:1180px;max-height:82vh;overflow:auto;border:1px solid #ddd;border-radius:8px;padding:28px;box-shadow:1px 1px 1px #0002}
+.account-metrics-dialog header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.account-metrics-dialog h2{font-size:18px;font-weight:600;letter-spacing:-.3px;margin:0}
+.metric-detail-scroll{overflow-x:auto;margin:26px 0 18px;border-top:1px solid #eee;border-bottom:1px solid #eee}.metric-detail-table{width:max-content;min-width:100%;margin:0;border-collapse:separate;border-spacing:0}.metric-detail-table th,.metric-detail-table td{min-width:118px;padding:18px 20px;text-align:right;white-space:nowrap}.metric-detail-table th{font-size:11px;font-weight:400;color:#888;background:#fafafa}.metric-detail-table th small{display:block;font-size:10px;margin-top:6px}.metric-detail-table td{border:0}.metric-detail-source{display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:4px 0 18px}.account-metrics-dialog::backdrop{background:#0004}
+
+.account-auth-line{display:flex;align-items:center;gap:6px;font-size:11px;color:#555;white-space:nowrap}.account-auth-dot{width:4px;height:4px;border-radius:50%;background:#bbb;flex:none}.account-auth-dot.is-online{background:#666}.account-status-cell>div>small{display:block;margin-top:5px;font-size:10px;color:#aaa}
+
+.account-metric-hint{font-size:11px;color:#aaa;white-space:nowrap;margin-left:10px}.account-page .filters{min-width:0}

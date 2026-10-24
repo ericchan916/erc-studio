@@ -1,0 +1,3375 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "内容助手团队对话网关 V2",
+    "version": "0.2.0",
+    "description": "飞书官方设备扫码与私聊码认证；按已验证成员隔离的个人对话、搜索分页、归档回收站、幂等纯文本任务。没有业务工具或OS执行权限。"
+  },
+  "servers": [
+    {
+      "url": "https://{gateway_host}",
+      "variables": {
+        "gateway_host": {
+          "default": "team-gateway.example.invalid",
+          "description": "实施前配置并核验的私有HTTPS网关"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "GatewaySession": []
+    },
+    {
+      "GatewayCookie": []
+    }
+  ],
+  "x-status": "implemented_chat_only_gateway",
+  "x-provider-pkce-verified": false,
+  "x-member-cli-credential-routing-verified": false,
+  "x-runtime-tool-restriction-verified": true,
+  "x-tool-policy-default": "chat_only_no_business_tools",
+  "paths": {
+    "/v1/auth/login/start": {
+      "post": {
+        "operationId": "startLogin",
+        "summary": "核验真实成员并向绑定私聊发送一次性码；选择成员不完成认证",
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginStartRequest"
+              }
+            }
+          }
+        },
+        "x-authentication-guard": "login_state_or_client_challenge",
+        "description": "设备ID仅用于关联；交接前需要通过受信客户端登记及成员绑定验收。挑战和限流不代替认证。",
+        "x-implemented": true
+      }
+    },
+    "/v1/auth/feishu/callback": {
+      "get": {
+        "operationId": "feishuCallback",
+        "summary": "OAuth保留入口，当前明确返回503 oauth_not_configured",
+        "security": [],
+        "responses": {
+          "503": {
+            "description": "OAuth未接入，不伪造授权成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "x-authentication-guard": "login_state_or_client_challenge",
+        "x-onetime-state-required": true,
+        "x-implemented": false
+      }
+    },
+    "/v1/auth/login/poll": {
+      "post": {
+        "operationId": "pollLogin",
+        "summary": "校验客户端挑战和飞书私聊码，浏览器发HttpOnly Cookie，原生客户端返回短期凭据",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginPollResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginPollRequest"
+              }
+            }
+          }
+        },
+        "x-authentication-guard": "login_state_or_client_challenge",
+        "x-implemented": true
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "本人资料与服务器计算的能力",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "撤销当前网关会话，不删除对话",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OK"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations": {
+      "get": {
+        "operationId": "listConversations",
+        "summary": "只列当前成员的个人对话",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 256,
+              "description": "owner/query绑定的keyset分页标识"
+            },
+            "description": "整数分页偏移；messages还支持latest获取最近一页"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "active",
+                "archived",
+                "trash"
+              ],
+              "default": "active"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true,
+        "description": "按本人归属过滤；游标绑定查询和列表revision，列表变更返回409 list_changed。"
+      },
+      "post": {
+        "operationId": "createConversation",
+        "summary": "归属从principal派生，不接受客户端owner",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations/{conversation_id}/messages": {
+      "parameters": [
+        {
+          "name": "conversation_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "listMessages",
+        "summary": "只读取本人该会话的消息",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "整数分页偏移；messages还支持latest获取最近一页"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      },
+      "post": {
+        "operationId": "sendMessage",
+        "summary": "事务保存文本和job；202为受理，不是执行成功",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/jobs/{job_id}": {
+      "parameters": [
+        {
+          "name": "job_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getJob",
+        "summary": "读取原任务的已知状态与结果引用",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/jobs/{job_id}/events": {
+      "parameters": [
+        {
+          "name": "job_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "jobEvents",
+        "summary": "已鉴权job的状态及终态事件，不含内部推理或文本增量",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE事件；每个payload需符合Event结构；失效会话中止连接",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "x-event-schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Last-Event-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/jobs/{job_id}/cancel": {
+      "parameters": [
+        {
+          "name": "job_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "cancelJob",
+        "summary": "请求取消；202不代表在途写入已撤销",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "服务/worker状态，不证明真人登录或业务工具权限",
+        "security": [],
+        "x-implemented": true,
+        "responses": {
+          "200": {
+            "description": "无凭据的健康状态",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/members": {
+      "get": {
+        "operationId": "listLoginRecipients",
+        "summary": "仅展示已配置成员的接收代号与名称，无open_id或chat_id",
+        "security": [],
+        "x-implemented": true,
+        "responses": {
+          "200": {
+            "description": "配置名单；不是认证结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/feishu/start": {
+      "post": {
+        "operationId": "startFeishuScan",
+        "summary": "发起官方设备授权并返回真实授权二维码；不选择或自报成员",
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthStartRequest"
+              }
+            }
+          }
+        },
+        "x-authentication-guard": "login_state_or_client_challenge",
+        "description": "独立HOME及CONFIG_DIR；共享应用密钥只引用，原有用户凭据不复制。设备授权无网页回调。",
+        "x-implemented": true
+      }
+    },
+    "/v1/auth/feishu/poll": {
+      "post": {
+        "operationId": "finishFeishuScan",
+        "summary": "本人确认后完成官方认证，以真实tenant和open_id绑定成员",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginPollResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthPollRequest"
+              }
+            }
+          }
+        },
+        "x-authentication-guard": "login_state_or_client_challenge",
+        "x-implemented": true,
+        "description": "独立HOME及CONFIG_DIR；共享应用密钥只引用，原有用户凭据不复制。设备授权无网页回调。"
+      }
+    },
+    "/v1/conversations/{conversation_id}/rename": {
+      "post": {
+        "operationId": "renameConversation",
+        "summary": "本人会话rename，版本冲突不覆盖",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "本人当前会话元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          },
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations/{conversation_id}/pin": {
+      "post": {
+        "operationId": "pinConversation",
+        "summary": "本人会话pin，版本冲突不覆盖",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "本人当前会话元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          },
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations/{conversation_id}/archive": {
+      "post": {
+        "operationId": "archiveConversation",
+        "summary": "本人会话archive，版本冲突不覆盖",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "本人当前会话元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          },
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations/{conversation_id}/trash": {
+      "post": {
+        "operationId": "trashConversation",
+        "summary": "本人软删除到回收站，取消在途任务并阻止迟到回复",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "本人当前会话元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrashConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          },
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/conversations/{conversation_id}/restore": {
+      "post": {
+        "operationId": "restoreConversation",
+        "summary": "本人恢复被删除会话，保留原归档及置顶状态",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "本人当前会话元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestoreConversationRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          },
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    },
+    "/v1/jobs/{job_id}/retry": {
+      "parameters": [
+        {
+          "name": "job_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "retryJob",
+        "summary": "本人显式重试最新失败/取消问题，原用户消息不重复；未知状态须确认",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "当前文本对话网关响应",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetryJobRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/conversations/{conversation_id}": {
+      "get": {
+        "operationId": "getConversation",
+        "summary": "本人会话元数据，包括回收站状态；不给消息正文",
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "本人会话当前元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "参数、身份、归属、幂等、限流或适配器状态错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true,
+        "description": "按本人归属过滤；游标绑定查询和列表revision，列表变更返回409 list_changed。"
+      }
+    },
+    "/v1/conversations/start-message": {
+      "post": {
+        "operationId": "startConversationMessage",
+        "summary": "事务性新建对话并受理首条消息，失败不留空记录",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "text",
+                  "client_message_id"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16000
+                  },
+                  "client_message_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "同一幂等请求只建立一个会话和任务"
+          },
+          "400": {
+            "description": "参数无效"
+          },
+          "401": {
+            "description": "需要本人登录"
+          },
+          "409": {
+            "description": "成员忙碌或幂等冲突，事务不创建空会话"
+          },
+          "404": {
+            "description": "所属记录不存在"
+          }
+        },
+        "security": [
+          {
+            "GatewaySession": []
+          },
+          {
+            "GatewayCookie": []
+          }
+        ],
+        "x-authorization-scope": [
+          "member_active",
+          "session_valid",
+          "tenant_and_owner_match"
+        ],
+        "x-implemented": true
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "GatewaySession": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "本系统短期会话凭据，App主进程保管；不是飞书或Cherry Token，渲染层不直接获取。"
+      },
+      "GatewayCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "studio_gateway_session",
+        "description": "HttpOnly SameSite=Strict；私有HTTPS时Secure。"
+      }
+    },
+    "schemas": {
+      "LoginStartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "client_challenge": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_handle": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]{1,40}$",
+            "description": "选择验证码接收对象，不作为身份认证"
+          }
+        },
+        "required": [
+          "client_challenge",
+          "device_id",
+          "member_handle"
+        ]
+      },
+      "LoginStartResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delivery": {
+            "type": "string",
+            "const": "feishu_private_card"
+          },
+          "member_name": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "login_id",
+          "expires_at",
+          "delivery",
+          "member_name"
+        ]
+      },
+      "LoginPollRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client_verifier": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 128
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          }
+        },
+        "required": [
+          "login_id",
+          "client_verifier",
+          "code"
+        ]
+      },
+      "LoginPending": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "expired",
+              "denied"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "LoginGranted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "granted"
+          },
+          "session_credential": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 512,
+            "description": "仅X-Studio-Native且无Origin的受认证交接响应；浏览器使用HttpOnly Cookie，不返回此字段"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "member": {
+            "$ref": "#/components/schemas/Me"
+          }
+        },
+        "required": [
+          "status",
+          "expires_at",
+          "member"
+        ]
+      },
+      "LoginPollResponse": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/LoginPending"
+          },
+          {
+            "$ref": "#/components/schemas/LoginGranted"
+          }
+        ]
+      },
+      "Me": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "principal_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "capabilities": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "chat": {
+                "type": "boolean"
+              },
+              "feishu_read": {
+                "type": "boolean"
+              },
+              "feishu_write": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "chat",
+              "feishu_read",
+              "feishu_write"
+            ]
+          },
+          "auth_mode": {
+            "const": "feishu_device_oauth_and_private_otp"
+          }
+        },
+        "required": [
+          "principal_id",
+          "display_name",
+          "capabilities",
+          "auth_mode"
+        ]
+      },
+      "NewConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "Conversation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "archived_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "conversation_id",
+          "title",
+          "version",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ConversationPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Conversation"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "scope": {
+            "enum": [
+              "active",
+              "archived",
+              "trash"
+            ]
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "active": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "archived": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "trash": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "MessageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "client_message_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16000
+          }
+        },
+        "required": [
+          "client_message_id",
+          "text"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResultRef"
+            }
+          },
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "job_state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting_authorization",
+              "waiting_confirmation",
+              "succeeded",
+              "failed",
+              "cancel_requested",
+              "cancelled",
+              "execution_unknown"
+            ]
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "message_id",
+          "role",
+          "text",
+          "created_at",
+          "source_refs"
+        ]
+      },
+      "MessagePage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "older_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "ResultRef": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "feishu_record",
+              "feishu_doc",
+              "dataset",
+              "job"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "queried_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "kind",
+          "id",
+          "queried_at"
+        ]
+      },
+      "Accepted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting_authorization",
+              "waiting_confirmation",
+              "succeeded",
+              "failed",
+              "cancel_requested",
+              "cancelled",
+              "execution_unknown"
+            ]
+          }
+        },
+        "required": [
+          "job_id",
+          "message_id",
+          "state"
+        ]
+      },
+      "Job": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting_authorization",
+              "waiting_confirmation",
+              "succeeded",
+              "failed",
+              "cancel_requested",
+              "cancelled",
+              "execution_unknown"
+            ]
+          },
+          "effect_state": {
+            "type": "string",
+            "enum": [
+              "none",
+              "confirmed",
+              "unknown"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResultRef"
+            }
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "job_id",
+          "conversation_id",
+          "state",
+          "effect_state",
+          "created_at",
+          "updated_at",
+          "result_refs",
+          "error_code"
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "status",
+              "final",
+              "result_ref",
+              "error"
+            ]
+          },
+          "payload": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "job_id",
+          "seq",
+          "type",
+          "payload"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "status"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/StatusPayload"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "final"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/FinalPayload"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "result_ref"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/ResultPayload"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "error"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/ErrorPayload"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Problem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]{1,80}$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ]
+      },
+      "OK": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "StatusPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting_authorization",
+              "waiting_confirmation",
+              "succeeded",
+              "failed",
+              "cancel_requested",
+              "cancelled",
+              "execution_unknown"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "FinalPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 32000
+          },
+          "result_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResultRef"
+            }
+          }
+        },
+        "required": [
+          "text",
+          "result_refs"
+        ]
+      },
+      "ResultPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "result_ref": {
+            "$ref": "#/components/schemas/ResultRef"
+          }
+        },
+        "required": [
+          "result_ref"
+        ]
+      },
+      "ErrorPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]{1,80}$"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "OAuthStartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "client_challenge",
+          "device_id"
+        ],
+        "properties": {
+          "client_challenge": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "OAuthPollRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "login_id",
+          "client_verifier"
+        ],
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "client_verifier": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 128
+          }
+        }
+      },
+      "OAuthStartResponse": {
+        "type": "object",
+        "required": [
+          "login_id",
+          "verification_url",
+          "qrcode_data_url",
+          "expires_at",
+          "status",
+          "scope"
+        ],
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "verification_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "qrcode_data_url": {
+            "type": "string",
+            "pattern": "^data:image/png;base64,"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "const": "pending"
+          },
+          "scope": {
+            "const": "offline_access"
+          }
+        }
+      },
+      "ConversationChange": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "RenameConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version",
+          "title"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        }
+      },
+      "PinConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version",
+          "pinned"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pinned": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ArchiveConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version",
+          "archived"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TrashConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "RestoreConversationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_version"
+        ],
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "RetryJobRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "client_message_id",
+          "expected_version"
+        ],
+        "properties": {
+          "client_message_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "acknowledge_unknown": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "x-client-challenge-is-not-member-identity": true,
+  "x-device-member-binding-verified": false,
+  "x-auth-mode": "feishu_device_oauth_and_private_otp",
+  "x-os-execution-sandbox": false,
+  "x-official-device-flow-initiation-verified": true,
+  "x-conversation-lifecycle-version": 2,
+  "x-lifecycle-ui-deployed": true,
+  "x-lifecycle-human-ui-verified": false
+}

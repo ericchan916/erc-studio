@@ -1,0 +1,5 @@
+.task-page{display:flex;flex-direction:column;flex:1;min-height:0}
+.task-notice{display:none;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid #eceef2;background:#fff;color:#a84242}
+.task-page.load-error>.task-notice{display:flex}
+.task-notice #task-host{margin-left:auto;font-size:12px;color:#888}
+#task-mount{flex:1;min-height:0;background:#fff}

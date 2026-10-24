@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "version": "0.4.0",
+  "modules": [
+    {
+      "id": "home",
+      "name": "主页、本人对话与认证",
+      "spec": "docs/modules/home.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/conversation.cjs",
+        "workbench/web/home-chat.js",
+        "workbench/backend/core.py",
+        "workbench/backend/oauth.py",
+        "workbench/web/erc-brand.css",
+        "workbench/web/assets/erc-logo.svg"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_gateway.py",
+        "workbench/backend/tests/test_oauth.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "tasks",
+      "name": "任务、飞书原生页面与脚本资料",
+      "spec": "docs/modules/tasks.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/tasks.cjs",
+        "workbench/src/folder.cjs",
+        "workbench/src/content/project-pane.cjs"
+      ],
+      "test_files": [
+        "workbench/tests/tasks.test.cjs",
+        "workbench/tests/folder.test.cjs"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "content",
+      "name": "选题、项目、草稿和版本推进",
+      "spec": "docs/modules/content.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/content/service.cjs",
+        "workbench/src/content/client.cjs",
+        "workbench/src/content/model.cjs",
+        "workbench/web/content-ui.js"
+      ],
+      "test_files": [
+        "workbench/tests/content.test.cjs",
+        "workbench/tests/content-catalog.test.cjs",
+        "tests/test_service.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "production",
+      "name": "制作、口播、原片和成片回执",
+      "spec": "docs/modules/production.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/web/production-ui.js",
+        "workbench/backend/production_backend.py",
+        "workbench/backend/local_codex.py",
+        "workbench/backend/production_skill.py"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_production_backend.py",
+        "workbench/backend/tests/test_local_codex_routing.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "accounts",
+      "name": "账号、平台后台与双授权",
+      "spec": "docs/modules/accounts.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/store.cjs",
+        "workbench/src/metadata.cjs",
+        "workbench/src/platforms.cjs",
+        "workbench/backend/account_authorizations.py"
+      ],
+      "test_files": [
+        "workbench/tests/metadata.test.cjs",
+        "workbench/backend/tests/test_account_authorizations.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "publishing",
+      "name": "发布、上传、审核与平台终态",
+      "spec": "docs/modules/publishing.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/backend/publishing.py",
+        "workbench/backend/web/publish-console.js",
+        "contentbase/yxer.py",
+        "contentbase/frozen_media.py"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_publishing.py",
+        "tests/test_media_service.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "data",
+      "name": "账号指标、作品关联与运营复盘",
+      "spec": "docs/modules/data.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/backend/account_metrics.py",
+        "workbench/backend/scientist_metrics.py",
+        "workbench/web/account-metrics.js",
+        "workbench/web/analytics-ui.js"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_account_metrics.py",
+        "workbench/backend/tests/test_scientist_metrics.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "website",
+      "name": "官网、页面与 RUM 统计",
+      "spec": "docs/modules/website.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/website.cjs",
+        "workbench/src/analytics.cjs",
+        "workbench/src/analytics-source.cjs",
+        "workbench/src/tencent-rum/tencentRumAnalyticsProvider.mjs"
+      ],
+      "test_files": [
+        "workbench/tests/website.test.cjs",
+        "workbench/backend/tests/test_analytics_gateway.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "radar",
+      "name": "选题雷达、原文与仿写稿",
+      "spec": "docs/modules/radar.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/backend/radar_snapshot.py",
+        "workbench/web/radar-ui.js",
+        "workbench/web/radar-article.js"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_radar_snapshot.py",
+        "workbench/tests/radar-ui.test.cjs"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "activity-ops",
+      "name": "活动运营、任务与复盘",
+      "spec": "docs/modules/activity-ops.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/bar.cjs",
+        "workbench/web/bar-ui.js"
+      ],
+      "test_files": [
+        "workbench/tests/bar.test.cjs"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "workflow-monitor",
+      "name": "工作流状态、积压与技术回执",
+      "spec": "docs/modules/workflow-monitor.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/src/workflow/collector.py",
+        "workbench/src/workflow/receipts.py",
+        "workbench/src/workflow/service.cjs",
+        "workbench/web/workflow-ui.js"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_workflow_web.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "notifications",
+      "name": "通知中心、CardKit 和送达去重",
+      "spec": "docs/modules/notifications.md",
+      "implementation": "ported_original_source",
+      "source_files": [
+        "workbench/shared/notification-center/notification_center.py",
+        "workbench/shared/notification-center/notification_store.py",
+        "workbench/shared/notification-center/notification_cards.py"
+      ],
+      "test_files": [
+        "workbench/backend/tests/test_gateway.py"
+      ],
+      "business_acceptance": "pending_user_resources"
+    },
+    {
+      "id": "route:daily-task-checkin",
+      "name": "日报登记",
+      "spec": "docs/workflows/daily-task-checkin.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:task-deadline-followup",
+      "name": "任务截止日期追问",
+      "spec": "docs/workflows/task-deadline-followup.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:commercial-brief-evaluation",
+      "name": "商单判断",
+      "spec": "docs/workflows/commercial-brief-evaluation.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:commercial-brief-receivable",
+      "name": "接单与回款",
+      "spec": "docs/workflows/commercial-brief-receivable.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:activity-attendance-review",
+      "name": "活动参加与复盘",
+      "spec": "docs/workflows/activity-attendance-review.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:note-topic-linker",
+      "name": "笔记选题加工",
+      "spec": "docs/workflows/note-topic-linker.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:feishu-lark-cli",
+      "name": "飞书文档读写",
+      "spec": "docs/workflows/feishu-lark-cli.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:feishu-input-workflow",
+      "name": "附件与链接输入",
+      "spec": "docs/workflows/feishu-input-workflow.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:background-workflows",
+      "name": "后台任务",
+      "spec": "docs/workflows/background-workflows.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:data-scientist-api",
+      "name": "数据科学家 CLI",
+      "spec": "docs/workflows/data-scientist-api.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:wechat-official-reply",
+      "name": "微信公众号自动回复",
+      "spec": "docs/workflows/wechat-official-reply.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:studio-content-workbench",
+      "name": "内容工作台（App）",
+      "spec": "docs/workflows/studio-content-workbench.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:isolated-member-chat",
+      "name": "隔离成员飞书助手",
+      "spec": "docs/workflows/isolated-member-chat.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:studio-conversation-gateway",
+      "name": "ERC Studio对话后端",
+      "spec": "docs/workflows/studio-conversation-gateway.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:publisher-to-x-draft",
+      "name": "公众号素材转X审核稿",
+      "spec": "docs/workflows/publisher-to-x-draft.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:confirmed-note-to-x-draft",
+      "name": "已确认瞬间转X待审稿",
+      "spec": "docs/workflows/confirmed-note-to-x-draft.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:workbench-image-generation",
+      "name": "工作台Codex配图",
+      "spec": "docs/workflows/workbench-image-generation.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:workbench-review-notifications",
+      "name": "工作台图文审核通知",
+      "spec": "docs/workflows/workbench-review-notifications.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:feishu-verbatim-publisher",
+      "name": "飞书作品原文发布稿",
+      "spec": "docs/workflows/feishu-verbatim-publisher.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:bar-acceptance",
+      "name": "活动运营活动验收",
+      "spec": "docs/workflows/bar-acceptance.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:content-review",
+      "name": "内容运营复盘Agent",
+      "spec": "docs/workflows/content-review.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    },
+    {
+      "id": "route:blogger-radar",
+      "name": "博主选题雷达",
+      "spec": "docs/workflows/blogger-radar.md",
+      "implementation": "contract_only",
+      "source_files": [],
+      "test_files": [],
+      "business_acceptance": "not_installed_by_source_checkout"
+    }
+  ]
+}

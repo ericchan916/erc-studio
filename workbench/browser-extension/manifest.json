@@ -1,0 +1,129 @@
+{
+  "manifest_version": 3,
+  "name": "ERC Studio·官方页面内嵌桥",
+  "version": "0.6.8",
+  "description": "工作室内嵌飞书、蚁小二、公众号与X；登录会话留在本人本地浏览器。",
+  "minimum_chrome_version": "121",
+  "permissions": [
+    "declarativeNetRequestWithHostAccess",
+    "contentSettings",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://studio.example.invalid/*",
+    "https://*.feishu.cn/*",
+    "https://www.yixiaoer.cn/*",
+    "https://mp.weixin.qq.com/*",
+    "https://x.com/*",
+    "https://api.x.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "feishu_embed",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://studio.example.invalid/*"
+      ],
+      "js": [
+        "bridge.js"
+      ],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    },
+    {
+      "matches": [
+        "https://www.yixiaoer.cn/web/*"
+      ],
+      "js": [
+        "yxer-auth.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://mp.weixin.qq.com/*",
+        "https://x.com/*"
+      ],
+      "js": [
+        "publisher-session.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://mp.weixin.qq.com/*"
+      ],
+      "js": [
+        "wechat-diagnostics.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://mp.weixin.qq.com/*"
+      ],
+      "js": [
+        "wechat-navigation.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://x.com/*"
+      ],
+      "js": [
+        "x-api-relay-page.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://x.com/*"
+      ],
+      "js": [
+        "x-api-relay-content.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ],
+  "action": {
+    "default_title": "ERC Studio·飞书内嵌已启用"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "publisher-host.html",
+        "publisher-host.js",
+        "publisher-host.css"
+      ],
+      "matches": [
+        "https://studio.example.invalid/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; frame-src https://mp.weixin.qq.com; frame-ancestors https://studio.example.invalid; base-uri 'none'"
+  }
+}
